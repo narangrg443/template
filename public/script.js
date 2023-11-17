@@ -1,6 +1,11 @@
+console.log('hello world');
+const arry=[3,4,5,6,4,7];
 
-console.log('hello');
-const x=[2,4,3,4,5,4,6,6]
-const m={a:34,b:45,c:'hello'}
-const {a,b,c}=m;
-console.log(a,b,c)
+arry.forEach(e=>{
+  console.log(e)
+})
+console.log(typeof arry);console.log('wtsup')
+const string=arry.join(',');
+console.log(string)
+string.replace(3,1)
+console.log(string)

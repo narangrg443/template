@@ -1,4 +1,12 @@
 body{
+  
   background-color: #c2c2c2;
   font-size: 12px;
+}
+.messageContainer{
+  background-color:green;
+}
+.parendDiv{
+  border-radius: 4px;
+  padding:2px;
 }
