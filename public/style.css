@@ -1,12 +1,25 @@
 body{
   
   background-color: #c2c2c2;
-  font-size: 12px;
+
 }
 .messageContainer{
-  background-color:green;
+  background-color:black;
+  max-height: 80%;
+  overflow: auto;
 }
 .parendDiv{
   border-radius: 4px;
-  padding:2px;
+   
+  
 }
+.messageTypeSpan{
+  color:#f8992c;
+  
+font:italic normal bold  12px/1.2 'Times New Roman', Times, serif;
+}
+.messageContentSpan{
+  color:#06ffdb;
+    font:italic  normal  12px 'Times New Roman', Times, serif;
+}
+
