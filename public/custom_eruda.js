@@ -1,36 +1,6 @@
 (function() {
   let consoleVisible = true; // Track whether the console box is visible
 
-
-  const styles = `
-    .messageContainer {
-      background-color: black;
-      max-height: 80%;
-      overflow: auto;
-    }
-
-    .parentDiv {
-      border-radius: 4px;
-    }
-
-    .messageTypeSpan {
-      color: #f8992c;
-      font: italic normal bold 12px/1.2 'Times New Roman', Times, serif;
-    }
-
-    .messageContentSpan {
-      color: #06ffdb;
-      font: italic normal 12px 'Times New Roman', Times, serif;
-    }
-  `;
-
-  const styleElement = document.createElement('style');
-  styleElement.type = 'text/css';
-  styleElement.appendChild(document.createTextNode(styles));
-  document.head.appendChild(styleElement);
-
-
-
   // Function to toggle the console box visibility
   const toggleConsole = () => {
     consoleVisible = !consoleVisible;
@@ -52,17 +22,24 @@
       color = 'red';
     }
 
+    // Create a parent div
     const parentDiv = document.createElement('div');
+
     parentDiv.style.padding = '2px';
     parentDiv.style.backgroundColor = 'black';
     parentDiv.style.fontSize = '12px';
     parentDiv.style.marginBottom = '2px';
 
+    // Create a span for the message type
     const messageTypeSpan = document.createElement('span');
-    messageTypeSpan.textContent = type === 'CONSOLE_MSG' ? 'LOG: ' : 'ERROR: ';
-    messageTypeSpan.style.color = '#f8992c';
+    messageTypeSpan.textContent = type === 'CONSOLE_MSG' ? 'LOG: ' : 'ERROR:';
+
+    // Apply color using the CSS class
+    messageTypeSpan.classList.add('messageTypeSpan');
+
     parentDiv.appendChild(messageTypeSpan);
 
+    // Create a span for the message content
     const messageContentSpan = document.createElement('span');
     messageContentSpan.textContent = message;
     messageContentSpan.style.color = color;
@@ -71,10 +48,10 @@
     messageContainer.appendChild(parentDiv);
     messageContainer.style.borderRadius = '10px';
 
+    // Other class modifications
     consoleContainer.classList.add('consoleContainer');
     messageContainer.classList.add('messageContainer');
     toggleButton.classList.add('toggleButton');
-    messageTypeSpan.classList.add('messageTypeSpan');
     messageContentSpan.classList.add('messageContentSpan');
     parentDiv.classList.add('parentDiv');
   };
@@ -123,13 +100,48 @@
   consoleContainer.appendChild(messageContainer);
   consoleContainer.appendChild(toggleButton);
 
+  const styles = `
+    .messageContainer {
+      background-color: black;
+      max-height: 80%;
+      overflow: auto;
+    }
+
+    .parentDiv {
+      border-radius: 4px;
+    }
+
+    .messageTypeSpan {
+      color: #f8992c;
+      font: italic normal bold 12px/1.2 'Times New Roman', Times, serif;
+    }
+
+    .messageContentSpan {
+      color: #06ffdb;
+      font: italic normal 12px 'Times New Roman', Times, serif;
+    }
+  `;
+
+  const styleElement = document.createElement('style');
+  styleElement.type = 'text/css';
+  styleElement.appendChild(document.createTextNode(styles));
+  document.head.appendChild(styleElement);
 
   document.body.appendChild(consoleContainer);
 
   const originalConsoleLog = console.log;
   console.log = (...args) => {
     const logMessage = args.map(arg => typeof arg === 'string' ? `"${arg}"` : arg).join(' ');
-    appendMessage(logMessage, 'CONSOLE_MSG');
+
+    // Get the file name from the Error stack trace
+    const stack = new Error().stack.split('\n');
+    const callerInfo = stack[2].trim().replace(/^at\s+/g, '');
+    const fileName = callerInfo.substring(callerInfo.lastIndexOf('/') + 1);
+
+    // Include file name in the message
+    const messageWithFileName = `[${fileName}] ${logMessage}`;
+    
+    appendMessage(messageWithFileName, 'CONSOLE_MSG');
     originalConsoleLog.apply(console, args);
   };
 
